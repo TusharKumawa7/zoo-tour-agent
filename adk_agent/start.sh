@@ -1,0 +1,3 @@
+#!/bin/bash
+cd /app
+exec adk api_server --host 0.0.0.0 --port 8080 .
