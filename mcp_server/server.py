@@ -1,6 +1,7 @@
 import json
 import os
 from mcp.server.fastmcp import FastMCP
+import uvicorn
 
 mcp = FastMCP("Zoo MCP Server")
 
@@ -39,4 +40,7 @@ def find_animal_by_diet(diet_type: str) -> str:
     matches = [{"id": k, "name": v["name"], "diet": v["diet"], "location": v["location_in_zoo"]} for k, v in ZOO_ANIMALS.items() if diet_type.lower() in v["diet"].lower()]
     return json.dumps({"results": matches, "total": len(matches)})
 
-app = mcp.streamable_http_app()
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", "8080"))
+    app = mcp.streamable_http_app()
+    uvicorn.run(app, host="0.0.0.0", port=port, forwarded_allow_ips="*", proxy_headers=True)
