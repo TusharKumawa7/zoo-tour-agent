@@ -2,12 +2,8 @@ import json
 import os
 from mcp.server.fastmcp import FastMCP
 import uvicorn
-from starlette.applications import Starlette
-from starlette.middleware import Middleware
-from starlette.middleware.trustedhost import TrustedHostMiddleware
-from starlette.routing import Mount
 
-mcp = FastMCP("Zoo MCP Server")
+mcp = FastMCP("Zoo MCP Server", host="0.0.0.0", port=int(os.environ.get("PORT", "8080")))
 
 ZOO_ANIMALS = {
     "lion": {"name": "African Lion", "scientific_name": "Panthera leo", "habitat": "Savanna and grasslands", "diet": "Carnivore", "lifespan": "10-14 years in the wild", "status": "Vulnerable", "fun_fact": "Lions are the only cats that live in groups called prides.", "location_in_zoo": "Savanna Exhibit, Zone A"},
@@ -44,13 +40,5 @@ def find_animal_by_diet(diet_type: str) -> str:
     matches = [{"id": k, "name": v["name"], "diet": v["diet"], "location": v["location_in_zoo"]} for k, v in ZOO_ANIMALS.items() if diet_type.lower() in v["diet"].lower()]
     return json.dumps({"results": matches, "total": len(matches)})
 
-mcp_app = mcp.streamable_http_app()
-
-app = Starlette(
-    middleware=[Middleware(TrustedHostMiddleware, allowed_hosts=["*"])],
-    routes=[Mount("/", app=mcp_app)],
-)
-
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", "8080"))
-    uvicorn.run(app, host="0.0.0.0", port=port, proxy_headers=True, forwarded_allow_ips="*")
+    mcp.run(transport="streamable-http")
