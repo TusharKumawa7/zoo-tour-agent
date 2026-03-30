@@ -40,5 +40,5 @@ def find_animal_by_diet(diet_type: str) -> str:
     return json.dumps({"results": matches, "total": len(matches)})
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8080))
-    mcp.run(transport="streamable-http", port=port)
+    os.environ["FASTMCP_PORT"] = os.environ.get("PORT", "8080")
+    mcp.run(transport="streamable-http")
