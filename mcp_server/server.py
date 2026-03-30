@@ -22,7 +22,7 @@ def list_animals() -> str:
 
 @mcp.tool()
 def get_animal_info(animal_id: str) -> str:
-    """Get detailed information about a specific zoo animal. Args: animal_id: e.g. lion, elephant, penguin, giraffe, panda, tiger"""
+    """Get detailed information about a specific zoo animal."""
     animal_id = animal_id.lower().strip()
     if animal_id not in ZOO_ANIMALS:
         return json.dumps({"error": "Animal not found.", "available_animals": ", ".join(ZOO_ANIMALS.keys())})
@@ -36,7 +36,7 @@ def get_endangered_animals() -> str:
 
 @mcp.tool()
 def find_animal_by_diet(diet_type: str) -> str:
-    """Find animals by their diet type. Args: diet_type: carnivore or herbivore"""
+    """Find animals by their diet type."""
     matches = [{"id": k, "name": v["name"], "diet": v["diet"], "location": v["location_in_zoo"]} for k, v in ZOO_ANIMALS.items() if diet_type.lower() in v["diet"].lower()]
     return json.dumps({"results": matches, "total": len(matches)})
 
