@@ -2,6 +2,8 @@ import json
 import os
 from mcp.server.fastmcp import FastMCP
 import uvicorn
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
 
 mcp = FastMCP("Zoo MCP Server")
 
@@ -43,4 +45,4 @@ def find_animal_by_diet(diet_type: str) -> str:
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", "8080"))
     app = mcp.streamable_http_app()
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    uvicorn.run(app, host="0.0.0.0", port=port, forwarded_allow_ips="*")
